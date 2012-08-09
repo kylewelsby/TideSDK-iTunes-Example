@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <title>iTunes</title>
+  <link rel="stylesheet" type="text/css" href="./css/app.css" media="all" />
+  <script type="text/javascript" src="./js/app.js"></script>
+</head>
+<body>
+  <div data-yield='main'>
+    <img src="http://placekitten.com/256/256" alt="iTunes" width=256 height=256/>
+  </div>
+  <script type="text/template" id="tunes/index">
+    <div class="playing-status"><span data-bind-class="app.stateText" data-bind="app.stateText"></span></div>
+    <div class='playhead-progress' data-bind='app.percentPlayed'></div>
+    <div class='scroller'>
+      <span data-bind="track.artist">Artist</span> - <span data-bind="track.name">Track Name</span>
+    </div>
+  </script>
+</body>
+</html>
