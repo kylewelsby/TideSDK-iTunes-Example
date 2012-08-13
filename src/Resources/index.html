@@ -3,18 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>iTunes</title>
-  <link rel="stylesheet" type="text/css" href="./css/app.css" media="all" />
-  <script type="text/javascript" src="./js/app.js"></script>
+  <!--link rel="stylesheet" type="text/css" href="./css/app.css" media="all" /-->
+  <!--script type="text/javascript" src="./js/app.js"></scripti-->
+  <style>
+    html,body{
+      background:white;
+      font-size:12px;
+    }
+  </style>
+  <script>
+var command, process, result;
+command = ['osascript',
+'-e', 'tell application "System Events"',
+'-e', '  set plyr to {}',
+'-e', '  set loc to {}',
+'-e', '  set trk to {}',
+'-e', '  set rning to count (every process whose displayed name is "iTunes")',
+'-e', '  if rning > 0 then',
+'-e', '    tell application "iTunes"',
+'-e', '      set trk to {}',
+'-e', '      set loc to {}',
+'-e', '      set plyr to {position:player position, state:player state}',
+'-e', '      if player state is not stopped then',
+'-e', '        set trk to {name:name,artist:artist,album:album,duration:duration,id:database id,kind:kind} of current track',
+'-e', '        set loc to POSIX path of (get location of current track)',
+'-e', '      end if',
+'-e', '      return {player:plyr, track:trk, location:loc}',
+'-e', '    end tell',
+'-e', '  end if',
+'-e', '  return {player:plyr, track:trk, location:loc}',
+'-e', 'end tell',
+'-s', 's'
+];
+
+setInterval(function(){
+process = new Titanium.Process.createProcess(command);
+  console.log(command.join(' '));
+
+  result = process()
+  result = result.toString();
+  console.log(result);
+  document.body.innerHTML = "";
+  document.body.innerHTML = result;
+  },1000);
+  </script>
 </head>
 <body>
   <div data-yield='main'>
     <img src="http://placekitten.com/256/256" alt="iTunes" width=256 height=256/>
   </div>
   <script type="text/template" id="tunes/index">
-    <div class="playing-status"><span data-bind-class="app.stateText" data-bind="app.stateText"></span></div>
-    <div class='playhead-progress' data-bind='app.percentPlayed'></div>
+    <div class="playing-status"><span data-bind-class="app.app.player.state" data-bind="app.app.player.state"></span></div>
+    <div class='playhead-progress' data-bind='app.app.percentPlayed'></div>
     <div class='scroller'>
-      <span data-bind="track.artist">Artist</span> - <span data-bind="track.name">Track Name</span>
+      <span data-bind="app.app.track.artist">Artist</span> - <span data-bind="app.app.track.name">Track Name</span>
     </div>
   </script>
 </body>
