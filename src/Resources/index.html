@@ -2,20 +2,40 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <title>iTunes</title>
-  <link rel="stylesheet" type="text/css" href="./css/app.css" media="all" />
-  <script type="text/javascript" src="./js/app.js"></script>
-</head>
-<body>
-  <div data-yield='main'>
-    <img src="http://placekitten.com/256/256" alt="iTunes" width=256 height=256/>
-  </div>
-  <script type="text/template" id="tunes/index">
-    <div class="playing-status"><span data-bind-class="app.stateText" data-bind="app.stateText"></span></div>
-    <div class='playhead-progress' data-bind='app.percentPlayed'></div>
-    <div class='scroller'>
-      <span data-bind="track.artist">Artist</span> - <span data-bind="track.name">Track Name</span>
-    </div>
+  <title>MP3 Upload Example</title>
+  <style type="text/css">
+    html,body{
+      background-color:white;
+      color:black;
+    }
+  </style>
+  <script type="text/javascript">
+    if(!window.Ti){
+      window.Ti = Titanium;
+    }
+    var xhr, dir,file,content,boundary,body;
+  dir = Ti.Filesystem.getApplicationDirectory();
+  file = Ti.Filesystem.getFile(dir + '/test.mp3');
+
+  content = file.read()
+
+  boundary = "----Example";
+
+  body = "";
+      body += "--" + boundary + "\r\n";
+      body += "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name() + "\"\r\n";
+      body += "Content-Type: application/octet-stream\r\n";
+      body += "Content-Length: " + file.size() + "\r\n";
+      body += "\r\n" + content + "\r\n";
+      body += "--" + boundary + "--";
+
+      console.log(body);
+
+      xhr = Ti.Network.createHTTPCient();
+      xhr.open("PUT", "http://lvh.me:9393");
+      xhr.setRequestHeader("Content-Type", "multipart/file-data; boundary=" + boundary);
+      xhr.send(body);
   </script>
-</body>
+</head>
+<body id="body">review the console for output</body>
 </html>
