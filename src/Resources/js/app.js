@@ -13150,18 +13150,14 @@ a){var b=F.exec(a);b&&(b[1]=(b[1]||"").toLowerCase(),b[3]=b[3]&&new RegExp("(?:^
     __extends(ITunesApp, _super);
 
     function ITunesApp() {
-      this.currentTrack = __bind(this.currentTrack, this);
-
       this.isPlaying = __bind(this.isPlaying, this);
 
-      this.isRunning = __bind(this.isRunning, this);
-
       this.getOsa = __bind(this.getOsa, this);
+      this.set('file_dir', Titanium.Filesystem.getResourcesDirectory().toString());
+      this.set('app', this.tellApp());
       this.set('stateText', 'stopped');
       this.set('playhead', null);
-      this.set('iTunesRunning', 0);
-      this.set('trackDuration', 0);
-      this.set('currentDatabaseID', 0);
+      this.set('isRunning', false);
       this.accessor('percentPlayed', {
         get: function(key) {
           return Math.round((this.get('playhead') / this.get('trackDuration')) * 100);
@@ -13170,75 +13166,37 @@ a){var b=F.exec(a);b&&(b[1]=(b[1]||"").toLowerCase(),b[3]=b[3]&&new RegExp("(?:^
     }
 
     ITunesApp.prototype.getOsa = function() {
-      var state, _ref;
-      this.set('iTunesRunning', parseInt(this.tellApp('count (every process whose displayed name is "iTunes")', 'System Events')));
-      state = (_ref = this.tellApp('return {player state, player position}')) != null ? _ref.split(',') : void 0;
-      if (state) {
-        this.set('currentDatabaseID', parseInt(this.tellApp('return database id of current track'), 10));
-        this.set('stateText', state[0]);
-        this.set('playhead', parseInt(state[1], 10));
+      var app;
+      app = this.tellApp();
+      this.set('app', app);
+      if (app.is_running > 0) {
+        this.set('isRunning', true);
+        this.set('stateText', app.player.state);
+        if (isNaN(app.player.position)) {
+          return this.set('playhead', 0);
+        } else {
+          this.set('playhead', app.player.position);
+          return this.set('track', new Tunes.Track(app.track));
+        }
+      } else {
+        return this.set('isRunning', false);
       }
-    };
-
-    ITunesApp.prototype.isRunning = function() {
-      this.getOsa();
-      return this.get('itunesTunning') > 0;
     };
 
     ITunesApp.prototype.isPlaying = function() {
-      this.getOsa();
-      if (this.get('stateText') === "stopped") {
-        return false;
-      }
-      if (this.get('stateText') === "playing") {
-        return true;
-      }
-      return false;
-    };
-
-    ITunesApp.prototype.currentTrack = function() {
-      var info, location, spl;
-      info = this.tellApp('return {n:name,ar:artist,al:album,d:duration,id:database id,kind:kind} of current track').split(/,\s\w+:/);
-      location = this.tellApp('return POSIX path of ((get location of current track) as text)').replace(/\n/, '');
-      this.set('trackDuration', parseFloat(info[3]));
-      spl = location.split('/');
-      return new Tunes.Track({
-        name: info[0].substr(2),
-        artist: info[1],
-        album: info[2],
-        duration: parseFloat(info[3]),
-        databaseID: parseInt(info[4]),
-        location: location,
-        filetype: this.trackMime(info[5]),
-        filename: location.split('/')[spl.length - 1]
-      });
-    };
-
-    ITunesApp.prototype.trackMime = function(kind) {
-      switch (kind.replace(/\n/, '')) {
-        case "MPEG audio file":
-          return "audio/mpeg";
-        case "MPEG audio stream":
-          return "audio/mpeg";
-        case "AAC audio file":
-          return "audio/m4a";
-        case "Purchased AAC audio file":
-          return "audio/m4a";
-        case "WAV audio file":
-          return "audio/wav";
-        default:
-          return "unknown";
-      }
+      return this.get('app').player.state === "playing";
     };
 
     ITunesApp.prototype.tellApp = function(to, app) {
-      var command, process;
-      if (!app) {
-        app = "iTunes";
+      var command, process, result;
+      command = ['osascript', "" + (this.get('file_dir')) + "/itunes.applescript"];
+      try {
+        process = Titanium.Process.createProcess(command);
+        result = process().toString();
+        return JSON.parse(result);
+      } catch (err) {
+        return console.error("somethign went wrong " + err);
       }
-      command = ["osascript", "-e", "tell app \"" + app + "\" to " + to];
-      process = Titanium.Process.createProcess(command);
-      return process().toString();
     };
 
     return ITunesApp;
@@ -13274,11 +13232,7 @@ a){var b=F.exec(a);b&&(b[1]=(b[1]||"").toLowerCase(),b[3]=b[3]&&new RegExp("(?:^
     };
 
     TunesController.prototype.refresh = function(params) {
-      if (this.get('app').isPlaying() === true) {
-        if (this.get('track') === void 0 || (this.get('app').get('currentDatabaseID') !== this.get('track').get('databaseID'))) {
-          return this.set('track', this.get('app').currentTrack());
-        }
-      }
+      return this.get('app').getOsa();
     };
 
     return TunesController;
