@@ -1,7 +1,10 @@
 require 'coyote/rake'
 
+manifest = File.read(File.expand_path('../src/manifest',__FILE__))
+sdk = manifest.match(/^sdk: (\d{1}\.\d{1}.+)$/)[1]
+
 BOURBON = File.expand_path("../app/sass/bourbon/lib/bourbon.rb",__FILE__)
-TIBUILD = '~/Library/Application\ Support/Titanium/sdk/osx/1.2.1.RC1/tibuild.py'
+TIBUILD = "~/Library/Application\\ Support/Titanium/sdk/osx/#{sdk}/tibuild.py"
 
 SASS = "./app/sass/app.scss"
 CSS = "./src/Resources/css/app.css"
@@ -58,7 +61,7 @@ end
 
 namespace :run do
   desc "RuniOS version of the application"
-  task :osx => ['compile'] do
+  task :osx do
     sh "#{TIBUILD} --run --os osx --dest #{BUILD_OUT} --noinstall --type bundle #{BUILD_SOURCE}"
   end
 
