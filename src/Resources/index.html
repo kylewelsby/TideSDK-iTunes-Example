@@ -1,21 +1,22 @@
 <!DOCTYPE HTML>
 <html lang="en-GB">
-<head>
-  <meta charset="UTF-8">
-  <title>MP3 Upload Example</title>
-  <style type="text/css">
-    html,body{
-      background-color:white;
-      color:black;
-    }
-  </style>
-</head>
-<body id="body">review the console for output</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ruby Example</title>
+    <style type="text/css">
+      html,body{
+        background-color:white;
+        color:black;
+      }
+    </style>
+  </head>
+  <body id="body">review the console for output</body>
   <script>
+    Titanium.include('./test.rb');
     Titanium.include('./test.php');
   </script>
   <script>
-    test_php("hello world");
+    alert(test_ruby("hello ruby world"));
+    alert(test_php("hello php world"));
   </script>
-
 </html>

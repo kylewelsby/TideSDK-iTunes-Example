@@ -1,6 +1,17 @@
-# Script injection from PHP
+# Simple example application
 
-Script injection [google discussion](https://groups.google.com/d/msg/tidesdk/-/E4qkZiE7wukJ.)
+Testing language scripting
+
+To run application on Mac OS
+
+    make run
+    
+
+
+#### example tests for google discussions
+* [is it possible to output JavaScript with PHP?](https://groups.google.com/forum/#!msg/tidesdk/y7agwb78dQg/E4qkZiE7wukJ)
+* [python works, but ruby doesn't](https://groups.google.com/forum/#!msg/tidesdk/Swtj1sAeGqs/eZedCd0KgSwJ)
+
 
 To run `make run`
 
