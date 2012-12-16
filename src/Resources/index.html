@@ -1,41 +1,42 @@
 <!DOCTYPE HTML>
 <html lang="en-GB">
-<head>
-  <meta charset="UTF-8">
-  <title>MP3 Upload Example</title>
-  <style type="text/css">
-    html,body{
-      background-color:white;
-      color:black;
-    }
-  </style>
-  <script type="text/javascript">
-    if(!window.Ti){
-      window.Ti = Titanium;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <title>MP3 Upload Example</title>
+    <style type="text/css">
+      html,body{
+        background-color:white;
+        color:black;
+      }
+    </style>
+    <script type="text/javascript">
+      //    if(!window.Ti){
+      //      window.Ti = Titanium;
+      //    }
     var xhr, dir,file,content,boundary,body;
-  dir = Ti.Filesystem.getApplicationDirectory();
-  file = Ti.Filesystem.getFile(dir + '/test.mp3');
+    dir = Ti.Filesystem.getApplicationDirectory();
+    file = Ti.Filesystem.getFile(dir + '/test.mp3');
 
-  content = file.read()
+    content = file.read();
 
-  boundary = "----Example";
+    boundary = "----Example";
 
-  body = "";
-      body += "--" + boundary + "\r\n";
-      body += "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name() + "\"\r\n";
-      body += "Content-Type: application/octet-stream\r\n";
-      body += "Content-Length: " + file.size() + "\r\n";
-      body += "\r\n" + content + "\r\n";
-      body += "--" + boundary + "--";
+    body = "";
+    body += "--" + boundary + "\r\n";
+    body += "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name() + "\"\r\n";
+    body += "Content-Type: application/octet-stream\r\n";
+    body += "Content-Length: " + file.size() + "\r\n";
+    body += "\r\n" + content + "\r\n";
+    body += "--" + boundary + "--";
 
-      console.log(body);
+    console.log(body);
 
-      xhr = Ti.Network.createHTTPCient();
-      xhr.open("PUT", "http://lvh.me:9393");
-      xhr.setRequestHeader("Content-Type", "multipart/file-data; boundary=" + boundary);
-      xhr.send(body);
-  </script>
-</head>
-<body id="body">review the console for output</body>
+    xhr = Ti.Network.createHTTPClient();
+    xhr.open("PUT", "http://lvh.me:9292");
+    xhr.setRequestHeader("Content-Type", "multipart/file-data; boundary=" + boundary);
+    xhr.send(body);
+
+    </script>
+  </head>
+  <body id="body">review the console for output</body>
 </html>

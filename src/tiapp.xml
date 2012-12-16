@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-  <id>com.mekyle.itunes-example</id>
-  <name>iTunes Exmaple</name>
-  <version>1.0</version>
-  <publisher>MeKyle</publisher>
-  <url>https://github.com/kylewelsby/TideSDK-iTunes-Example</url>
-  <icon>iCloudTunes256x256.png</icon>
-  <copyright>This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/</copyright>
+<id>com.mekyle.itunes-example</id>
+<name>iTunes-Exmaple</name>
+<version>1.0</version>
+<publisher>MeKyle</publisher>
+<url>https://github.com/kylewelsby/TideSDK-iTunes-Example</url>
+<icon>default_app_logo.png</icon>
+<copyright>This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/</copyright>
   <analytics>false</analytics>
   <window>
     <id>initial</id>
